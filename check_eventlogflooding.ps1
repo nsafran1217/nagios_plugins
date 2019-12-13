@@ -7,9 +7,9 @@ Param (
     [Parameter()]
     [int]$secondsToMeasure = 5,
     [Parameter()]
-    [int]$warnThreshold = 10,
+    [int]$warnThreshold = 3,
     [Parameter()]
-    [int]$criticalThreshold = 20
+    [int]$criticalThreshold = 10
 )
 
 $exitvar = 3
@@ -18,7 +18,7 @@ try {
     $starttime = $endtime.AddSeconds(-$secondsToMeasure)
     $log = Get-EventLog -LogName Application -After $starttime -Before $endtime
     $numOfLogs = $log.Count
-    if ($numOfLogs -ge $warnThreshold -and $numOfLogs -lt $critical) {
+    if ($numOfLogs -ge $warnThreshold -and $numOfLogs -lt $criticalThreshold) {
         $message = $log.Message[0].Replace("`n","")
         $output = "Warning: $numOfLogs events in the last $secondsToMeasure seconds. Last Message: $message"
         $exitvar = 1
