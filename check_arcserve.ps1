@@ -34,6 +34,8 @@ while (Get-Job -Name jobcheck | where State -ne "Completed") {
     if ($timer.Elapsed.TotalSeconds -gt $Timeout) {
         Write-Output "ERROR - Check has timed-out."
         $exitvar = 3
+        get-process ca_qmgr | Stop-Process -Force -Confirm:$false
+        Remove-Job -Force -Job $job
         exit $exitvar #Exit with unknown
     }
 }
